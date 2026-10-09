@@ -4,16 +4,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Guest Accommodation – Reception</title>
+    <link rel="icon" type="image/png" href="/images/logo.png">
     <link rel="stylesheet" href="/css/style.css?v={{ filemtime(public_path('css/style.css')) }}">
 </head>
 <body>
     <aside>
         <div class="brand">
-            <b>⚓ Guest Accommodation</b>
-            <span>Mindoro Marine Mfg. Corp.</span>
+            <div class="brand-row">
+                <img class="logo" src="/images/logo.png" alt="">
+                @include('partials.company', ['dark' => true])
+            </div>
+            <span>Guest Accommodation</span>
         </div>
 
         <nav>
+            {{-- online reservations waiting for an ID check; both reception and the admin can review them --}}
+            @php($pendingApprovals = \App\Models\Booking::where('status', 'Pending')->count())
             @if (auth()->user()->role == 'reception')
             <a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a>
 
@@ -21,6 +27,7 @@
             <a href="/checkin" class="{{ request()->is('checkin*') ? 'active' : '' }}">Check-in</a>
             <a href="/checkout" class="{{ request()->is('checkout*') ? 'active' : '' }}">Check-out</a>
             <a href="/bookings" class="{{ request()->is('bookings*') ? 'active' : '' }}">Reservations</a>
+            <a href="/approvals" class="{{ request()->is('approvals') ? 'active' : '' }}">Approvals @if ($pendingApprovals)<span class="nav-count">{{ $pendingApprovals }}</span>@endif</a>
             <a href="/calendar" class="{{ request()->is('calendar') ? 'active' : '' }}">Calendar</a>
 
             <div class="group">Records</div>
@@ -28,11 +35,17 @@
 
             @else
                 <a href="/admin" class="{{ request()->is('admin') ? 'active' : '' }}">Admin Dashboard</a>
+                <a href="/approvals" class="{{ request()->is('approvals') ? 'active' : '' }}">Approvals @if ($pendingApprovals)<span class="nav-count">{{ $pendingApprovals }}</span>@endif</a>
 
                 <div class="group">Setup</div>
                 <a href="/admin/locations" class="{{ request()->is('admin/locations*') ? 'active' : '' }}">Locations</a>
                 <a href="/rooms" class="{{ request()->is('rooms*') ? 'active' : '' }}">Rooms</a>
                 <a href="/admin/users" class="{{ request()->is('admin/users*') ? 'active' : '' }}">Accounts</a>
+
+                <div class="group">Public site</div>
+                <a href="/admin/contact" class="{{ request()->is('admin/contact') ? 'active' : '' }}">Banner and contact</a>
+                @php($newMessages = \App\Models\Message::whereNull('read_at')->count())
+                <a href="/admin/messages" class="{{ request()->is('admin/messages') ? 'active' : '' }}">Guest messages @if ($newMessages)<span class="nav-count">{{ $newMessages }}</span>@endif</a>
             @endif
         </nav>
 

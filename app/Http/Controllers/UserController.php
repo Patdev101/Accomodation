@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        return view('admin.users', ['users' => User::orderBy('role')->orderBy('name')->get(), 'editing' => null]);
+        return view('admin.users', ['users' => User::where('role', '!=', 'guest')->orderBy('role')->orderBy('name')->get(), 'editing' => null]);
     }
 
     public function store(Request $request)
@@ -36,7 +36,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return view('admin.users', ['users' => User::orderBy('role')->orderBy('name')->get(), 'editing' => $user]);
+        return view('admin.users', ['users' => User::where('role', '!=', 'guest')->orderBy('role')->orderBy('name')->get(), 'editing' => $user]);
     }
 
     public function update(Request $request, User $user)

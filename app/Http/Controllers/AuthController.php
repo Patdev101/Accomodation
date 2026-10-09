@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
-    public function showLogin()
-    {
-        return view('login');
-    }
-
     public function login(Request $request)
     {
         $data = $request->validate([
@@ -31,6 +26,11 @@ class AuthController extends Controller
         if (Auth::attempt($data)) {
             $request->session()->regenerate();
 
+            // a guest always lands on the home page, which welcomes them by name
+            if (Auth::user()->role == 'guest') {
+                return redirect('/');
+            }
+
             // the admin starts on the admin page, reception on the dashboard
             return redirect(Auth::user()->role == 'admin' ? '/admin' : '/dashboard');
         }
@@ -40,11 +40,14 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        // a guest goes back to the public site, staff to the login page
+        $wasGuest = $request->user() && $request->user()->role == 'guest';
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect($wasGuest ? '/' : '/login');
     }
 
     // ================= SET / FORGOT PASSWORD =================

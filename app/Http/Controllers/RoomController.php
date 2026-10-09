@@ -8,6 +8,7 @@ use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Storage;
 
 class RoomController extends Controller
 {
@@ -91,7 +92,7 @@ class RoomController extends Controller
                 ->limit(6)
                 ->get(),
 
-            'users' => User::orderBy('role')
+            'users' => User::where('role', '!=', 'guest')->orderBy('role')
                 ->orderBy('name')
                 ->get(),
         ]);
@@ -152,9 +153,11 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
-        Room::create(
+        $room = Room::create(
             $this->validated($request)
         );
+
+        $this->savePhotos($request, $room);
 
         return redirect('/rooms')
             ->with('success', 'Room added successfully.');
@@ -180,6 +183,8 @@ class RoomController extends Controller
             $this->validated($request)
         );
 
+        $this->savePhotos($request, $room);
+
         return redirect('/rooms')
             ->with('success', 'Room updated successfully.');
     }
@@ -196,6 +201,8 @@ class RoomController extends Controller
                     'Cannot delete this room because it has reservations.'
                 );
         }
+
+        Storage::disk('public')->delete($room->photos ?? []);
 
         $room->delete();
 
@@ -246,6 +253,40 @@ class RoomController extends Controller
             $request->status.
             '.'
         );
+    }
+
+    /**
+     * Remove the photos ticked on the form, then add the newly uploaded ones.
+     * Photos are on the public disk because the public site shows them.
+     */
+    private function savePhotos(Request $request, Room $room): void
+    {
+        $request->validate([
+            // 2 MB is the upload limit of PHP on this machine
+            'photos.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'remove_photos.*' => 'string',
+        ], [
+            'photos.*.image' => 'Room photos must be JPG, PNG or WebP images.',
+            'photos.*.mimes' => 'Room photos must be JPG, PNG or WebP images.',
+            'photos.*.max' => 'Each room photo can be up to 2 MB.',
+            'photos.*.uploaded' => 'Each room photo can be up to 2 MB.',
+        ]);
+
+        $photos = $room->photos ?? [];
+        $removed = array_intersect($photos, $request->input('remove_photos', []));
+
+        Storage::disk('public')->delete($removed);
+        $photos = array_values(array_diff($photos, $removed));
+
+        foreach ($request->file('photos', []) as $photo) {
+            if (count($photos) >= Room::MAX_PHOTOS) {
+                break;
+            }
+
+            $photos[] = $photo->store('rooms', 'public');
+        }
+
+        $room->update(['photos' => $photos]);
     }
 
     /**

@@ -31,6 +31,9 @@ class Booking extends Model
         8 => 'Guest Leaves',
     ];
 
+    // valid IDs accepted at check-in and for online reservations
+    const ID_TYPES = ['Company ID', "Driver's License", 'National ID', 'Passport', 'UMID', 'PWD ID', 'Other Government ID'];
+
     // rows shown per page in the long tables (Previous / Next buttons go to the rest)
     const PER_PAGE = 5;
 
@@ -41,7 +44,8 @@ class Booking extends Model
         'checkout_step', 'inspection_notes', 'damage_notes', 'charges', 'charges_paid', 'id_returned', 'room_after',
         'actual_check_out', 'checkout_notes', 'guest_list', 'address',
         'billing_rate_type', 'billing_rate', 'checked_in_at', 'checkout_verified_at',
-        'additional_charges', 'amount_paid',
+        'additional_charges', 'amount_paid', 'user_id',
+        'id_photo', 'reviewed_by', 'reviewed_at', 'decline_reason', 'guest_seen_at',
     ];
 
     protected $casts = [
@@ -59,6 +63,8 @@ class Booking extends Model
         'checkout_verified_at' => 'datetime',
         'additional_charges' => 'array',
         'amount_paid' => 'decimal:2',
+        'reviewed_at' => 'datetime',
+        'guest_seen_at' => 'datetime',
     ];
 
     public function room()
@@ -66,16 +72,44 @@ class Booking extends Model
         return $this->belongsTo(Room::class);
     }
 
+    // the guest account that made the reservation online (empty when reception made it)
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // true when the room already has a reservation or a guest between the two dates
+    public static function roomTaken($roomId, string $checkIn, string $checkOut): bool
+    {
+        return static::where('room_id', $roomId)
+            // a reservation still waiting for approval holds the room too
+            ->whereIn('status', ['Pending', 'Reserved', 'Checked In', 'Checking Out'])
+            ->where('check_in', '<', $checkOut)
+            ->where('check_out', '>', $checkIn)
+            ->exists();
+    }
+
     // css class for the status badge
     public function badge()
     {
         return [
+            'Pending' => 'checking',
+            'Declined' => 'cancelled',
             'Reserved' => 'reserved',
             'Checked In' => 'checked',
             'Checking Out' => 'checking',
             'Checked Out' => 'out',
             'Cancelled' => 'cancelled',
         ][$this->status] ?? 'out';
+    }
+
+    // the status in the guest's own words, shown on the public site
+    public function guestStatus(): string
+    {
+        return [
+            'Pending' => 'Waiting for approval',
+            'Reserved' => 'Confirmed',
+        ][$this->status] ?? $this->status;
     }
 
     // everyone in the group, the main guest first; each row has name, address and contact_no

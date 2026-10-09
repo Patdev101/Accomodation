@@ -33,7 +33,7 @@ class RoomRatesTest extends TestCase
 
         $this->assertNull($room->rate);
         $this->assertSame(
-            'Per hour: ₱150.00 · Day tour: ₱750.00',
+            'Per hour: ₱150.00 · Daily: ₱750.00',
             $room->rateSummary()
         );
 
@@ -42,19 +42,19 @@ class RoomRatesTest extends TestCase
         $this->actingAs($reception)
             ->get('/checkin')
             ->assertOk()
-            ->assertSee('H-101 (good for 2) — Per hour: ₱150.00 · Day tour: ₱750.00');
+            ->assertSee('H-101 (good for 2) — Per hour: ₱150.00 · Daily: ₱750.00');
 
         $this->get('/dashboard')
             ->assertOk()
             ->assertSee('Per hour')
             ->assertSee('₱150.00')
-            ->assertSee('Day tour')
+            ->assertSee('Daily')
             ->assertSee('₱750.00');
 
         $this->get('/bookings')
             ->assertOk()
             ->assertSee('H-101 — Guest Villa')
-            ->assertSee('Per hour: ₱150.00 · Day tour: ₱750.00');
+            ->assertSee('Per hour: ₱150.00 · Daily: ₱750.00');
     }
 
     public function test_admin_must_set_at_least_one_rate(): void

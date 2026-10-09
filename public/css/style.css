@@ -2668,3 +2668,1320 @@ button:disabled {
 .confirm-box .actions {
     justify-content: flex-end;
 }
+/* =========================================================
+   PUBLIC SITE (guests: home page, sign up, book a room)
+   ========================================================= */
+
+body.site {
+    display: block;
+
+    background: #fff;
+}
+
+.site-wrap {
+    width: 100%;
+    max-width: 1080px;
+
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+
+    background: #fff;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.site-nav .site-wrap,
+.site-nav nav {
+    display: flex;
+    align-items: center;
+
+    gap: 6px 18px;
+
+    flex-wrap: wrap;
+}
+
+.site-nav .site-wrap {
+    justify-content: space-between;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.site-brand {
+    color: var(--nav);
+
+    text-decoration: none;
+    line-height: 1.25;
+}
+
+.site-brand b {
+    display: block;
+
+    font-size: 16px;
+}
+
+.site-brand span {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.site-nav nav a:not(.btn) {
+    padding: 8px 0;
+
+    color: var(--text);
+
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.site-nav nav a:not(.btn):hover,
+.site-nav nav a.active {
+    color: var(--teal);
+}
+
+.site-nav form {
+    margin: 0;
+}
+
+.hero {
+    padding: 64px 0 72px;
+
+    background: linear-gradient(135deg, var(--nav-dark), var(--nav2));
+    color: #fff;
+
+    border-bottom: 4px solid var(--teal);
+}
+
+.hero h1 {
+    max-width: 640px;
+
+    margin: 0 0 12px;
+
+    font-size: 34px;
+    line-height: 1.2;
+}
+
+.hero p {
+    max-width: 600px;
+
+    margin: 0 0 24px;
+
+    color: #d5dff0;
+
+    font-size: 16px;
+}
+
+a.btn.hero-btn {
+    min-height: 44px;
+
+    padding: 10px 22px;
+
+    background: var(--teal);
+    color: #fff;
+
+    border-color: var(--teal);
+
+    font-size: 15px;
+}
+
+a.btn.hero-btn:hover {
+    background: #17879c;
+}
+
+a.btn.hero-btn.outline {
+    background: transparent;
+
+    border-color: #fff;
+}
+
+a.btn.hero-btn.outline:hover {
+    background: rgba(255, 255, 255, .12);
+}
+
+.site-main {
+    max-width: 1080px;
+
+    padding-top: 28px;
+    padding-bottom: 48px;
+}
+
+.site-section {
+    padding: 20px 0 28px;
+
+    /* the sticky menu must not cover the heading after a jump to #rooms */
+    scroll-margin-top: 70px;
+}
+
+.location-title {
+    margin: 22px 0 10px;
+
+    color: var(--nav);
+}
+
+.room-list,
+.how-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+
+    gap: 16px;
+}
+
+.room-item {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+
+    padding: 16px;
+
+    background: #fff;
+
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--teal);
+    border-radius: 8px;
+
+    box-shadow: var(--shadow-sm);
+}
+
+.room-item-head b {
+    display: block;
+
+    color: var(--nav);
+
+    font-size: 18px;
+}
+
+.room-item-head span {
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+.room-item-rates {
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.room-item-rates li {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 5px 0;
+
+    border-bottom: 1px dashed var(--border);
+}
+
+.room-item-rates span {
+    color: var(--muted);
+}
+
+.room-item-tag {
+    display: inline-block;
+
+    margin: 0 4px 4px 0;
+    padding: 3px 9px;
+
+    background: var(--teal-light);
+    color: #14606c;
+
+    border: 1px solid var(--teal-border);
+    border-radius: 20px;
+
+    font-size: 12px;
+}
+
+/* the button stays at the bottom so cards in a row line up */
+.room-item > a.btn {
+    margin-top: auto;
+}
+
+.how-item {
+    padding: 16px;
+
+    background: var(--light);
+
+    border-radius: 8px;
+}
+
+.how-item span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+
+    margin-bottom: 8px;
+
+    background: var(--nav);
+    color: #fff;
+
+    border-radius: 50%;
+
+    font-weight: 700;
+}
+
+.how-item b {
+    display: block;
+}
+
+.how-item p {
+    margin: 4px 0 0;
+
+    color: var(--muted);
+}
+
+.book-form {
+    max-width: 720px;
+}
+
+.book-form .actions {
+    margin-top: 18px;
+}
+
+.site-footer {
+    padding: 20px 0;
+
+    background: var(--light);
+    color: var(--text);
+
+    border-top: 1px solid var(--border);
+
+    font-size: 13px;
+}
+
+.site-footer span {
+    display: block;
+
+    color: var(--muted);
+}
+
+/* sign-up card: a little wider than the login card, with the terms in a small scrolling box */
+.login.signup {
+    max-width: 440px;
+}
+
+.terms-box {
+    max-height: 150px;
+
+    overflow-y: auto;
+
+    margin-bottom: 10px;
+    padding: 10px 12px;
+
+    background: var(--light);
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    font-size: 12.5px;
+}
+
+.terms-box ol {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.terms-box li {
+    margin-bottom: 6px;
+}
+
+@media (max-width: 600px) {
+
+    .hero {
+        padding: 40px 0 46px;
+    }
+
+    .hero h1 {
+        font-size: 26px;
+    }
+}
+
+/* the company logo (public/images/logo.png, transparent so it sits on white or navy) */
+.logo {
+    width: 44px;
+    height: 44px;
+
+    flex-shrink: 0;
+}
+
+.site-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+aside .brand .logo,
+.login-header .logo {
+    display: block;
+
+    width: 56px;
+    height: 56px;
+
+    margin-bottom: 8px;
+    padding: 4px;
+
+    /* a white tile, so the teal ship is clear on the navy background */
+    background: #fff;
+
+    border-radius: 10px;
+}
+
+.login-header .logo {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* the company name, written like the company wordmark:
+   navy bold small capitals on top, teal spaced capitals below */
+.company {
+    display: inline-block;
+
+    line-height: 1.15;
+    text-align: left;
+}
+
+.company b {
+    display: block;
+
+    color: #003474;
+
+    font-size: 19px;
+    font-weight: 800;
+    font-variant: small-caps;
+    letter-spacing: .6px;
+    white-space: nowrap;
+}
+
+.company span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--teal);
+
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* navy text cannot be read on the navy sidebar and login header, so it is white there */
+.company.on-dark b {
+    color: #fff;
+}
+
+.company.on-dark span,
+aside .brand .company span,
+.site-brand .company span,
+.site-footer .company span {
+    margin-top: 2px;
+
+    color: var(--teal);
+
+    font-size: 9.5px;
+    letter-spacing: 1.6px;
+}
+
+aside .brand .company.on-dark span {
+    color: #4fc3d6;
+}
+
+aside .brand .company b {
+    font-size: 17px;
+}
+
+.login-header .company {
+    margin-bottom: 10px;
+
+    text-align: center;
+}
+
+.login-header .company.on-dark span {
+    color: #4fc3d6;
+}
+
+.site-footer .company {
+    margin-bottom: 6px;
+}
+
+/* public footer: company and copyright on the left, contact details (set by the admin) on the right */
+.site-footer .site-wrap {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px 40px;
+
+    flex-wrap: wrap;
+}
+
+.site-footer small {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.site-contact b {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--nav);
+
+    font-size: 12px;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+}
+
+.site-contact ul {
+    display: flex;
+
+    gap: 6px 20px;
+
+    flex-wrap: wrap;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.site-contact a {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 6px;
+
+    /* tall enough to tap comfortably on a phone */
+    min-height: 32px;
+
+    color: var(--text);
+
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.site-contact a:hover {
+    color: var(--teal);
+}
+
+.site-contact svg {
+    color: var(--teal);
+}
+
+/* log in and sign up as pop-ups on the public site: the same card as before, inside a .modal */
+.modal .login {
+    max-height: calc(100vh - 40px);
+
+    overflow-y: auto;
+}
+
+.login-header {
+    position: relative;
+}
+
+/* the × in the top right corner of the pop-up */
+.login-header .close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    width: 36px;
+    min-height: 36px;
+
+    color: #fff;
+
+    border-radius: 50%;
+
+    line-height: 1;
+}
+
+.login-header .close:hover {
+    background: rgba(255, 255, 255, .15);
+}
+
+/* number of online reservations waiting for approval, beside the menu link */
+.nav-count {
+    display: inline-block;
+
+    min-width: 20px;
+
+    margin-left: 6px;
+    padding: 1px 6px;
+
+    background: var(--orange);
+    color: #fff;
+
+    border-radius: 10px;
+
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Approvals page: the reason box sits beside the Decline button */
+.decline-form {
+    display: flex;
+
+    gap: 6px;
+
+    min-width: 260px;
+
+    margin-top: 6px;
+}
+
+.decline-form input {
+    padding: 6px 8px;
+
+    font-size: 13px;
+}
+
+/* room carousel on the public home page: one row per location that slides sideways */
+.carousel {
+    margin-top: 22px;
+}
+
+.carousel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 10px;
+}
+
+.carousel .location-title {
+    margin: 0;
+}
+
+.location-title small {
+    margin-left: 6px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.carousel-buttons {
+    display: flex;
+
+    gap: 6px;
+}
+
+.carousel-buttons button {
+    width: 38px;
+    padding: 0;
+
+    background: #fff;
+    color: var(--nav);
+
+    border-radius: 50%;
+
+    font-size: 22px;
+    line-height: 1;
+}
+
+/* every room of this location is already on screen: no arrows needed */
+.carousel.fits .carousel-buttons {
+    display: none;
+}
+
+.carousel .room-list {
+    display: flex;
+
+    overflow-x: auto;
+
+    /* room for the card shadow and the focus outline */
+    padding: 4px 2px 12px;
+
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+}
+
+.carousel .room-item {
+    /* four cards across on a wide screen, fewer as it narrows */
+    flex: 0 0 calc((100% - 48px) / 4);
+
+    min-width: 230px;
+
+    scroll-snap-align: start;
+}
+
+.carousel .room-list:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+
+    /* on a phone, one card and a peek of the next, so it is clear there is more to swipe */
+    .carousel .room-item {
+        flex-basis: 82%;
+    }
+}
+
+/* "How to book" pop-up: the same card as log in, wide enough for the three steps side by side */
+.login.how-box {
+    max-width: 760px;
+}
+
+.how-actions {
+    justify-content: flex-end;
+
+    margin-top: 18px;
+}
+
+/* the three steps stay in one row, and stack on a phone */
+.how-box .how-list {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 600px) {
+
+    .how-box .how-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* small note under a step in the "How to book" pop-up */
+.how-note {
+    display: block;
+
+    margin-top: 8px;
+    padding-top: 8px;
+
+    color: #14606c;
+
+    border-top: 1px dashed var(--teal-border);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Public site colours: the header and footer are white, the page between them is a soft
+   blue-grey, and the content sits on white cards. This keeps the header clearly apart from the page. */
+body.site {
+    background: #e9eef5;
+}
+
+.site-nav {
+    border-bottom: 3px solid var(--teal);
+
+    box-shadow: 0 2px 10px rgba(31, 42, 58, .10);
+}
+
+.site-footer {
+    background: #fff;
+}
+
+/* the hero already ends the header with its own navy block, so its teal line is not doubled */
+.hero {
+    border-bottom: 0;
+}
+
+/* staff sidebar: the logo sits beside the company name, like the public site header */
+aside .brand-row {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 8px;
+}
+
+aside .brand .brand-row .logo {
+    width: 40px;
+    height: 40px;
+
+    margin-bottom: 0;
+    padding: 3px;
+
+    border-radius: 8px;
+}
+
+aside .brand .brand-row .company b {
+    font-size: 14px;
+    letter-spacing: .3px;
+}
+
+aside .brand .brand-row .company.on-dark span {
+    margin-top: 1px;
+
+    font-size: 7.5px;
+    letter-spacing: .7px;
+}
+
+/* =========================================================
+   PUBLIC SITE: MENU UNDER THE GUEST'S NAME
+   ========================================================= */
+
+.user-menu {
+    position: relative;
+}
+
+.user-menu summary {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 6px;
+
+    min-height: 38px;
+
+    padding: 8px 14px;
+
+    background: #eef1f5;
+    color: var(--text);
+
+    border: 1px solid #aab3c0;
+    border-radius: 6px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+    list-style: none;
+}
+
+.user-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.user-menu summary::after {
+    content: "▾";
+
+    font-size: 11px;
+}
+
+.user-menu[open] summary::after {
+    content: "▴";
+}
+
+.user-menu-list {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 10;
+
+    width: 230px;
+
+    padding: 6px;
+
+    background: #fff;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    box-shadow: var(--shadow);
+}
+
+.user-menu-who {
+    margin-bottom: 4px;
+    padding: 8px 10px 10px;
+
+    border-bottom: 1px solid var(--border);
+
+    line-height: 1.3;
+}
+
+.user-menu-who b,
+.user-menu-who small {
+    display: block;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-menu-who small {
+    color: var(--muted);
+}
+
+/* every row of the menu looks the same, whether it is a link or a button */
+.site-nav .user-menu-list a,
+.user-menu-list button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    min-height: 38px;
+
+    padding: 8px 10px;
+
+    background: none;
+    color: var(--text);
+
+    border: 0;
+    border-radius: 6px;
+
+    font-size: 14px;
+    font-weight: 400;
+    text-align: left;
+    text-decoration: none;
+}
+
+.site-nav .user-menu-list a:hover,
+.user-menu-list button:hover {
+    background: var(--light);
+    color: var(--text);
+}
+
+.user-menu-list form {
+    margin-top: 4px;
+    padding-top: 4px;
+
+    border-top: 1px solid var(--border);
+}
+
+.user-menu-list form button {
+    color: var(--red);
+}
+
+/* On / Off at the end of the Dark mode row */
+.theme-toggle span {
+    padding: 1px 9px;
+
+    background: var(--border);
+    color: var(--text);
+
+    border-radius: 10px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.theme-toggle[aria-checked="true"] span {
+    background: var(--teal);
+    color: #fff;
+}
+
+/* the round ◐ button visitors use (they have no menu) */
+.theme-toggle.icon {
+    width: 38px;
+    padding: 0;
+
+    border-radius: 50%;
+
+    font-size: 18px;
+}
+
+/* FAQ pop-up: each question opens to show its answer */
+.faq-list details {
+    border-bottom: 1px solid var(--border);
+}
+
+.faq-list summary {
+    padding: 12px 4px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.faq-list summary:hover {
+    color: var(--teal);
+}
+
+.faq-list p {
+    margin: 0 4px 14px;
+
+    color: var(--muted);
+}
+
+/* Guest messages page (admin): long messages wrap and keep their line breaks */
+.message-body {
+    max-width: 480px;
+
+    overflow-wrap: anywhere;
+    white-space: pre-line;
+}
+
+/* =========================================================
+   PUBLIC SITE: DARK MODE
+   Turned on from the guest's menu; <html data-theme="dark"> is set by the script
+   in guest/layout.blade.php. Only the public site changes; the staff side stays light.
+   ========================================================= */
+
+html[data-theme="dark"] body.site {
+    --text: #e3e9f2;
+    --muted: #9dabbf;
+    --light: #1b2940;
+    --white: #172236;
+    --border: #2c3b52;
+    --border-dark: #3d4f69;
+    --nav: #a9c8f5;
+    --teal-light: #12323a;
+    --teal-border: #1d5560;
+
+    background: #0e1726;
+    color: var(--text);
+
+    color-scheme: dark;
+}
+
+html[data-theme="dark"] .site .site-nav,
+html[data-theme="dark"] .site .site-footer,
+html[data-theme="dark"] .site .room-item,
+html[data-theme="dark"] .site .login,
+html[data-theme="dark"] .site .user-menu-list,
+html[data-theme="dark"] .site table {
+    background: #172236;
+}
+
+html[data-theme="dark"] .site .site-nav {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .4);
+}
+
+/* the navy name of the company cannot be read on a dark header */
+html[data-theme="dark"] .site .company b {
+    color: #fff;
+}
+
+html[data-theme="dark"] .site .company span,
+html[data-theme="dark"] .site .site-contact svg {
+    color: #4fc3d6;
+}
+
+/* blocks that are navy in both modes keep their navy (their colour variable is light blue in dark mode) */
+html[data-theme="dark"] .site .login-header,
+html[data-theme="dark"] .site .how-item span {
+    background: #1f3c73;
+}
+
+html[data-theme="dark"] .site input,
+html[data-theme="dark"] .site select,
+html[data-theme="dark"] .site textarea {
+    background: #0e1726;
+    color: var(--text);
+}
+
+/* plain grey buttons; the blue, green, red and teal ones already work on dark */
+html[data-theme="dark"] .site button:not(.primary):not(.danger):not(.success-btn):not(.close),
+html[data-theme="dark"] .site a.btn:not(.primary):not(.hero-btn):not(.success-btn),
+html[data-theme="dark"] .site .user-menu summary {
+    background: #24334b;
+    color: var(--text);
+
+    border-color: var(--border-dark);
+}
+
+html[data-theme="dark"] .site .user-menu-list button:not(.primary) {
+    background: none;
+}
+
+html[data-theme="dark"] .site .user-menu-list form button {
+    color: #ff8a84;
+}
+
+html[data-theme="dark"] .site .user-menu-list a:hover,
+html[data-theme="dark"] .site .user-menu-list button:hover {
+    background: #24334b !important;
+}
+
+html[data-theme="dark"] .site th {
+    background: #1b2940;
+}
+
+html[data-theme="dark"] .site tr:hover td {
+    background: #1b2940;
+}
+
+html[data-theme="dark"] .site a:not(.btn) {
+    color: #7fb4f0;
+}
+
+html[data-theme="dark"] .site .site-nav nav a:not(.btn) {
+    color: var(--text);
+}
+
+html[data-theme="dark"] .site .room-item-tag,
+html[data-theme="dark"] .site .how-note {
+    color: #7fd3e0;
+}
+
+/* the success and error boxes keep their light backgrounds, so their text stays dark */
+html[data-theme="dark"] .site .alert a:not(.btn),
+html[data-theme="dark"] .site .error a:not(.btn) {
+    color: var(--blue);
+}
+
+/* =========================================================
+   PUBLIC SITE: FULL-WIDTH PAGE AND ROOM PHOTOS
+   ========================================================= */
+
+/* the public site uses the whole width of the screen (it used to stop at 1080px) */
+.site-wrap,
+.site-main {
+    max-width: 1700px;
+
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+@media (max-width: 700px) {
+
+    .site-wrap,
+    .site-main {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+/* room cards keep one comfortable size, so a wider screen simply shows more of them */
+.carousel .room-item {
+    flex: 0 0 300px;
+
+    padding: 0 16px 16px;
+
+    overflow: hidden;
+}
+
+/* cover photo at the top of a room card; clicking it opens the photo pop-up */
+.room-photo {
+    position: relative;
+
+    display: block;
+
+    width: calc(100% + 32px);
+    height: 170px;
+    min-height: 0;
+
+    margin: 0 -16px;
+    padding: 0;
+
+    background: var(--light);
+
+    border: 0;
+    border-radius: 0;
+
+    cursor: zoom-in;
+}
+
+.room-photo img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition: transform .2s ease;
+}
+
+.room-photo:hover img {
+    transform: scale(1.04);
+}
+
+.room-photo span {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+
+    padding: 3px 9px;
+
+    background: rgba(15, 23, 38, .75);
+    color: #fff;
+
+    border-radius: 12px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* a room the admin has not added photos to yet */
+.room-photo.none {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    cursor: default;
+}
+
+/* photo pop-up */
+.login.photo-box {
+    max-width: 900px;
+}
+
+.photo-stage {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.photo-stage img {
+    flex: 1;
+
+    min-width: 0;
+    max-height: 60vh;
+
+    background: var(--light);
+
+    border-radius: 6px;
+
+    object-fit: contain;
+}
+
+.photo-stage button {
+    flex-shrink: 0;
+
+    width: 40px;
+    padding: 0;
+
+    border-radius: 50%;
+
+    font-size: 22px;
+    line-height: 1;
+}
+
+/* room form (admin): the photos already saved, each with a Remove tick box */
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+
+    gap: 10px;
+
+    margin: 10px 0;
+}
+
+.photo-tile {
+    margin: 0;
+
+    overflow: hidden;
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    font-weight: 400;
+}
+
+.photo-tile img {
+    display: block;
+
+    width: 100%;
+    height: 100px;
+
+    object-fit: cover;
+}
+
+.photo-tile .check {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 8px;
+
+    font-size: 13px;
+}
+
+/* Home page banner with a photo uploaded by the admin. The photo is covered with a navy
+   wash, darker on the left where the text is, so the white text stays readable. */
+.hero.with-photo {
+    min-height: 380px;
+
+    display: flex;
+    align-items: center;
+
+    background:
+        linear-gradient(90deg, rgba(23, 46, 89, .88) 0%, rgba(23, 46, 89, .60) 55%, rgba(23, 46, 89, .30) 100%),
+        var(--banner) center / cover no-repeat;
+}
+
+/* Public site page (admin): preview of the current banner photo */
+.banner-preview {
+    display: block;
+
+    width: 100%;
+    max-width: 640px;
+    max-height: 220px;
+
+    margin: 10px 0;
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    object-fit: cover;
+}
+
+.banner-remove {
+    margin-top: 10px;
+}
+
+/* Home page banner with a video uploaded by the admin: the video fills the banner behind
+   the text, under the same navy wash as a banner photo. */
+.hero.with-video {
+    position: relative;
+
+    min-height: 380px;
+
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
+
+    background: var(--nav-dark);
+}
+
+.hero-video {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.hero.with-video::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+
+    background: linear-gradient(90deg, rgba(23, 46, 89, .88) 0%, rgba(23, 46, 89, .60) 55%, rgba(23, 46, 89, .30) 100%);
+}
+
+.hero.with-video .site-wrap {
+    position: relative;
+    z-index: 2;
+}
+
+/* small Pause / Play button in the corner of the banner */
+.hero-pause {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    z-index: 2;
+
+    min-height: 32px;
+
+    padding: 4px 12px;
+
+    background: rgba(15, 23, 38, .6) !important;
+    color: #fff !important;
+
+    border-color: rgba(255, 255, 255, .5) !important;
+
+    font-size: 12px;
+}

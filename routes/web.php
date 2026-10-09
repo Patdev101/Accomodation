@@ -1,19 +1,33 @@
 <?php
 
+use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GuestController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ReceptionController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminOnly;
+use App\Http\Middleware\GuestOnly;
 use App\Http\Middleware\ReceptionOnly;
+use App\Http\Middleware\StaffOnly;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => redirect('/login'));
+// public site: anyone can look at the rooms without an account
+Route::get('/', [GuestController::class, 'home']);
 
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+// guests sign up (email, password, terms and conditions) before they can reserve
+Route::middleware('guest')->group(function () {
+    Route::get('/signup', [GuestController::class, 'home'])->defaults('open', 'signup');
+    Route::post('/signup', [GuestController::class, 'signup'])->middleware('throttle:10,1');
+});
+
+// log in and sign up are pop-ups on the public home page
+Route::get('/login', [GuestController::class, 'home'])->name('login')->defaults('open', 'login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -24,6 +38,27 @@ Route::get('/reset-password/{token}', [AuthController::class, 'showReset'])->nam
 Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
 
 Route::middleware('auth')->group(function () {
+    // guest side: reserve a room and see their own reservations
+    Route::middleware(GuestOnly::class)->group(function () {
+        Route::get('/book', [GuestController::class, 'bookForm']);
+        Route::post('/book', [GuestController::class, 'book']);
+        Route::get('/my-reservations', [GuestController::class, 'reservations']);
+        Route::post('/my-reservations/{booking}/cancel', [GuestController::class, 'cancel']);
+
+        // feedback or a question sent from the menu under the guest's name
+        Route::post('/messages', [MessageController::class, 'store'])->middleware('throttle:10,1');
+    });
+
+    // the ID uploaded with an online reservation (staff, or the guest who sent it)
+    Route::get('/approvals/{booking}/id', [ApprovalController::class, 'idPhoto']);
+
+    // reception and the admin both approve or decline online reservations
+    Route::middleware(StaffOnly::class)->group(function () {
+        Route::get('/approvals', [ApprovalController::class, 'index']);
+        Route::post('/approvals/{booking}/approve', [ApprovalController::class, 'approve']);
+        Route::post('/approvals/{booking}/decline', [ApprovalController::class, 'decline']);
+    });
+
     // admin side: locations, rooms and accounts
     Route::middleware(AdminOnly::class)->group(function () {
         Route::get('/admin', [RoomController::class, 'admin']);
@@ -33,6 +68,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/locations/{location}/edit', [LocationController::class, 'edit']);
         Route::put('/admin/locations/{location}', [LocationController::class, 'update']);
         Route::delete('/admin/locations/{location}', [LocationController::class, 'destroy']);
+
+        // contact details in the footer of the public site
+        Route::get('/admin/contact', [SettingController::class, 'edit']);
+        Route::put('/admin/contact', [SettingController::class, 'update']);
+        Route::post('/admin/banner', [SettingController::class, 'saveBanner']);
+        Route::delete('/admin/banner', [SettingController::class, 'removeBanner']);
+
+        // feedback and questions from guests
+        Route::get('/admin/messages', [MessageController::class, 'index']);
 
         Route::resource('rooms', RoomController::class)->except('show');
 

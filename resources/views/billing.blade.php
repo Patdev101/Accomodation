@@ -20,7 +20,7 @@
         <div class="invoice-heading">
             <div>
                 <h2>Guest Accommodation</h2>
-                <p>Mindoro Marine Mfg. Corp.</p>
+                <p>Mindoro Marine Manufacturing Corporation</p>
             </div>
             <div class="invoice-number">
                 <b>{{ $isEstimate ? 'ESTIMATE' : 'BILL' }} #{{ str_pad((string) $booking->id, 6, '0', STR_PAD_LEFT) }}</b>

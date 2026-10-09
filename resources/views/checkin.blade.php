@@ -246,7 +246,7 @@
                     <select id="id_type" name="id_type" required>
                         <option value="">Select ID type</option>
 
-                        @foreach (['Company ID', "Driver's License", 'National ID', 'Passport', 'UMID', 'Other Government ID'] as $type)
+                        @foreach (\App\Models\Booking::ID_TYPES as $type)
                             <option {{ old('id_type') == $type ? 'selected' : '' }}>
                                 {{ $type }}
                             </option>

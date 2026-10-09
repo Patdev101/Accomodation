@@ -8,7 +8,7 @@
             : 'Add a new room to one of your locations.' }}
     </p>
 
-    <form id="room-form" class="room-form" method="POST" action="{{ $room->exists ? route('rooms.update', $room) : route('rooms.store') }}">
+    <form id="room-form" class="room-form" method="POST" action="{{ $room->exists ? route('rooms.update', $room) : route('rooms.store') }}" enctype="multipart/form-data">
         @csrf
         @if ($room->exists)
             @method('PUT')
@@ -85,6 +85,29 @@
 
             <div id="inclusion-list" class="inclusion-list"></div>
             <input type="hidden" name="inclusions" id="inclusions" value="{{ old('inclusions', $room->inclusions ?? '') }}">
+        </div>
+
+        <div class="box">
+            <h3>Photos</h3>
+            <p class="hint">Shown to guests on the public site. The first photo is the cover of the room card. Up to {{ \App\Models\Room::MAX_PHOTOS }} photos.</p>
+
+            @if ($room->photoUrls())
+                <div class="photo-grid">
+                    @foreach ($room->photoUrls() as $i => $url)
+                        <label class="photo-tile">
+                            <img src="{{ $url }}" alt="Photo {{ $i + 1 }} of {{ $room->room_no }}">
+                            <span class="check">
+                                <input type="checkbox" name="remove_photos[]" value="{{ $room->photos[$i] }}">
+                                Remove
+                            </span>
+                        </label>
+                    @endforeach
+                </div>
+            @endif
+
+            <label for="photos">Add photos</label>
+            <input type="file" id="photos" name="photos[]" accept=".jpg,.jpeg,.png,.webp" multiple>
+            <small class="hint">JPG, PNG or WebP, up to 2 MB each. You can choose several at once.</small>
         </div>
 
         <div class="actions">

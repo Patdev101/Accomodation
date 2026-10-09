@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Room extends Model
 {
@@ -18,12 +19,14 @@ class Room extends Model
         'rate_daytour',
         'status',
         'inclusions',
+        'photos',
     ];
 
     protected $casts = [
         'rate' => 'decimal:2',
         'rate_hourly' => 'decimal:2',
         'rate_daytour' => 'decimal:2',
+        'photos' => 'array',
     ];
 
     // Every room query also loads its location
@@ -62,6 +65,19 @@ class Room extends Model
             'Cleaning' => 'clean',
             'Maintenance' => 'maintenance',
         ][$this->status] ?? 'clean';
+    }
+
+    // most photos one room can have
+    const MAX_PHOTOS = 8;
+
+    /**
+     * Web addresses of the room's photos, for the public site.
+     *
+     * @return array<int, string>
+     */
+    public function photoUrls(): array
+    {
+        return array_map(fn (string $path) => Storage::disk('public')->url($path), $this->photos ?? []);
     }
 
     public function rateSummary(): string

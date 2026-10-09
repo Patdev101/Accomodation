@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BookingController extends Controller
 {
@@ -79,13 +80,7 @@ class BookingController extends Controller
         unset($data['check_in_datetime'], $data['check_out_datetime']);
 
         // Check if the room already has a booking during the selected dates.
-        $taken = Booking::where('room_id', $room->id)
-            ->whereIn('status', ['Reserved', 'Checked In', 'Checking Out'])
-            ->where('check_in', '<', $data['check_out'])
-            ->where('check_out', '>', $data['check_in'])
-            ->exists();
-
-        if ($taken) {
+        if (Booking::roomTaken($room->id, $data['check_in'], $data['check_out'])) {
             return back()
                 ->with('error', 'That room is already reserved during the selected dates.')
                 ->withInput();
@@ -113,6 +108,11 @@ class BookingController extends Controller
     {
         if (in_array($booking->status, ['Checked In', 'Checking Out'])) {
             return back()->with('error', 'Guest is still checked in.');
+        }
+
+        // the ID uploaded with an online reservation goes with it
+        if ($booking->id_photo) {
+            Storage::delete($booking->id_photo);
         }
 
         $booking->delete();

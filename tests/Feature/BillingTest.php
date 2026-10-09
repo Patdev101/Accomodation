@@ -62,11 +62,15 @@ class BillingTest extends TestCase
         $this->assertEquals(125, $booking->billing_rate);
         $this->assertNotNull($booking->checked_in_at);
 
+        // a checked-in guest leaves the Reservations page and appears on Check-out
         $this->get('/bookings')
             ->assertOk()
             ->assertSee('reservationDetailsModal')
-            ->assertSee('Taylor Guest')
-            ->assertSee('showReservationDetails(this)');
+            ->assertDontSee('Taylor Guest');
+
+        $this->get('/checkout')
+            ->assertOk()
+            ->assertSee('Taylor Guest');
 
         $this->get('/checkin/'.$booking->id.'/slip')
             ->assertOk()

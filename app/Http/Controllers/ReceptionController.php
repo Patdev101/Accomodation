@@ -511,7 +511,7 @@ class ReceptionController extends Controller
         $last = $first->copy()->endOfMonth();
 
         $bookings = Booking::with('room')
-            ->where('status', '!=', 'Cancelled')
+            ->whereNotIn('status', ['Cancelled', 'Declined'])
             ->where(function ($q) use ($first, $last) {
                 $q->whereBetween(
                     'check_in',
@@ -534,7 +534,7 @@ class ReceptionController extends Controller
             if ($b->check_in->betweenIncluded($first, $last)) {
                 $events[$arrivalDate][] = [
                     'type' => 'arrival',
-                    'label' => $b->status === 'Reserved' ? 'Reservation' : 'Arrival',
+                    'label' => ['Reserved' => 'Reservation', 'Pending' => 'Awaiting approval'][$b->status] ?? 'Arrival',
                     'guest' => $b->guest_name,
                     'room' => $b->room->room_no,
                     'time' => $b->timeText('check_in_time') ?: 'Time not set',
@@ -573,8 +573,8 @@ class ReceptionController extends Controller
         $rooms = Room::all();
 
         $bookings = Booking::with('room')
-            ->where('status', '!=', 'Reserved')
-            ->where('status', '!=', 'Cancelled')
+            // online requests that are still waiting or were declined never stayed
+            ->whereNotIn('status', ['Reserved', 'Cancelled', 'Pending', 'Declined'])
             ->orderByDesc('check_in')
             ->paginate(Booking::PER_PAGE)
             ->fragment('guest-log');
