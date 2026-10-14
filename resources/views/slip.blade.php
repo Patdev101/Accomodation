@@ -9,8 +9,11 @@
 
     <div class="slip">
         <div class="slip-head">
-            <b>Mindoro Marine Manufacturing Corporation</b>
-            Guest Accommodation – Room / Barracks Assignment
+            <img src="/img/logo-small.png" alt="Mindoro Marine Manufacturing Corporation logo" width="48" height="48">
+            <div>
+                <b>Mindoro Marine Manufacturing Corporation</b>
+                Guest Accommodation – Room / Barracks Assignment
+            </div>
         </div>
         <div class="slip-body">
             <div class="slip-room">

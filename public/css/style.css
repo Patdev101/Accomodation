@@ -2705,3 +2705,45 @@ button:disabled {
         display: none !important;
     }
 }
+
+/* =========================================================
+   COMPANY LOGO (sidebar, login pages, bill and room slip)
+   ========================================================= */
+
+aside .brand {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+}
+
+aside .brand img,
+.login-header img,
+.slip-head img,
+.invoice-brand img {
+    flex-shrink: 0;
+
+    background: #fff;
+
+    border-radius: 50%;
+}
+
+.login-header img {
+    display: block;
+
+    margin: 0 auto 12px;
+}
+
+.slip-head {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+.invoice-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+}

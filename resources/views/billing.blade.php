@@ -18,9 +18,12 @@
 
     <div class="box invoice">
         <div class="invoice-heading">
-            <div>
-                <h2>Guest Accommodation</h2>
-                <p>Mindoro Marine Mfg. Corp.</p>
+            <div class="invoice-brand">
+                <img src="/img/logo.png" alt="Mindoro Marine Manufacturing Corporation logo" width="64" height="64">
+                <div>
+                    <h2>Guest Accommodation</h2>
+                    <p>Mindoro Marine Mfg. Corp.</p>
+                </div>
             </div>
             <div class="invoice-number">
                 <b>{{ $isEstimate ? 'ESTIMATE' : 'BILL' }} #{{ str_pad((string) $booking->id, 6, '0', STR_PAD_LEFT) }}</b>

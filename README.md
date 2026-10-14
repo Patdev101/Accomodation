@@ -146,6 +146,8 @@ The seeder creates the login above, 7 rooms and 2 sample bookings. **The guest n
 
 **Auto refresh (14 October 2026):** the Dashboard, Check-out (list and a guest's steps), Reservations, Calendar, Guest Log, Admin Dashboard and admin Rooms pages reload by themselves when another user changes a booking, room or location. Every 5 seconds the page asks `/live-version` for a short code (`App\Support\LiveVersion::current()`: the count and latest `updated_at` of bookings, rooms and locations); when it differs from the code the page was loaded with, the page reloads and returns to the same scroll position. It never reloads while a pop-up is open, a box is focused, or someone has typed in a form on the page; then a small "Another user made changes — Refresh now" notice appears instead. Check-in, the room form, Accounts and Locations are left out so typing is never lost. The script is at the bottom of `layout.blade.php`. There is no websocket server; this is plain polling.
 
+**Company logo (14 October 2026):** the Mindoro Marine round logo is in `public/img/logo.png` (256 px) and `public/img/logo-small.png` (96 px), both cut to the circle with a transparent outside, and `public/favicon.ico` for the browser tab. It is shown in the sidebar (in place of the anchor symbol), on the login / forgot-password / set-password pages, on the guest bill and on the room slip. To change the logo, replace those three files and keep the names.
+
 Rules the code enforces (kept deliberately basic):
 
 - A room cannot be reserved twice for overlapping dates.
