@@ -32,7 +32,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // the admin starts on the admin page, reception on the dashboard
-            return redirect(Auth::user()->role == 'admin' ? '/admin' : '/dashboard');
+            return redirect(Auth::user()->canManageSetup() ? '/admin' : '/dashboard');
         }
 
         return back()->with('error', 'Wrong email or password.')->withInput();

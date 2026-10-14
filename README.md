@@ -148,6 +148,8 @@ The seeder creates the login above, 7 rooms and 2 sample bookings. **The guest n
 
 **Company logo (14 October 2026):** the Mindoro Marine round logo is in `public/img/logo.png` (256 px) and `public/img/logo-small.png` (96 px), both cut to the circle with a transparent outside, and `public/favicon.ico` for the browser tab. It is shown in the sidebar (in place of the anchor symbol), on the login / forgot-password / set-password pages, on the guest bill and on the room slip. To change the logo, replace those three files and keep the names.
 
+**Super admin (14 October 2026):** a third role, `superadmin`, above admin. The super admin sees **both** the setup pages and the front desk (the sidebar shows both groups), and is the only one who can create, edit, deactivate or send password links to **admin** accounts; an admin now manages reception accounts (and their own name and email) only. A super admin account can **never be deactivated** by anyone, and nobody can change their own role. The rules are methods on `User` (`canManageSetup`, `canUseFrontDesk`, `canManage`, `canDeactivate`, `assignableRoles`). Create the first super admin on the server with `php artisan user:superadmin someone@example.com --name="Name"`: a new account gets a temporary password printed once; an existing account is promoted and keeps its password. Tests: `tests/Feature/SuperAdminTest.php`. If the mail server refuses an email, Accounts now shows a red message instead of a 500 error.
+
 Rules the code enforces (kept deliberately basic):
 
 - A room cannot be reserved twice for overlapping dates.

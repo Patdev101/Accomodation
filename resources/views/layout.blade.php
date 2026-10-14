@@ -22,21 +22,25 @@
         </div>
 
         <nav>
-            @if (auth()->user()->role == 'reception')
-            <a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a>
-
-            <div class="group">Front desk</div>
-            <a href="/checkin" class="{{ request()->is('checkin*') ? 'active' : '' }}">Check-in</a>
-            <a href="/checkout" class="{{ request()->is('checkout*') ? 'active' : '' }}">Check-out</a>
-            <a href="/bookings" class="{{ request()->is('bookings*') ? 'active' : '' }}">Reservations</a>
-            <a href="/calendar" class="{{ request()->is('calendar') ? 'active' : '' }}">Calendar</a>
-
-            <div class="group">Records</div>
-            <a href="/reports" class="{{ request()->is('reports') ? 'active' : '' }}">Guest Log</a>
-
-            @else
+            {{-- reception sees the front desk, the admin sees the setup, the super admin sees both --}}
+            @if (auth()->user()->canManageSetup())
                 <a href="/admin" class="{{ request()->is('admin') ? 'active' : '' }}">Admin Dashboard</a>
+            @endif
 
+            @if (auth()->user()->canUseFrontDesk())
+                <a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">{{ auth()->user()->isSuperAdmin() ? 'Front desk dashboard' : 'Dashboard' }}</a>
+
+                <div class="group">Front desk</div>
+                <a href="/checkin" class="{{ request()->is('checkin*') ? 'active' : '' }}">Check-in</a>
+                <a href="/checkout" class="{{ request()->is('checkout*') ? 'active' : '' }}">Check-out</a>
+                <a href="/bookings" class="{{ request()->is('bookings*') ? 'active' : '' }}">Reservations</a>
+                <a href="/calendar" class="{{ request()->is('calendar') ? 'active' : '' }}">Calendar</a>
+
+                <div class="group">Records</div>
+                <a href="/reports" class="{{ request()->is('reports') ? 'active' : '' }}">Guest Log</a>
+            @endif
+
+            @if (auth()->user()->canManageSetup())
                 <div class="group">Setup</div>
                 <a href="/admin/locations" class="{{ request()->is('admin/locations*') ? 'active' : '' }}">Locations</a>
                 <a href="/rooms" class="{{ request()->is('rooms*') ? 'active' : '' }}">Rooms</a>
@@ -46,7 +50,7 @@
 
         <div class="user">
             {{ auth()->user()->name }}
-            <small>{{ auth()->user()->role == 'admin' ? 'Admin' : 'Reception' }} · {{ auth()->user()->email }}</small>
+            <small>{{ auth()->user()->roleLabel() }} · {{ auth()->user()->email }}</small>
             <form method="POST" action="/logout">
                 @csrf
                 <button type="submit" class="small">Logout</button>

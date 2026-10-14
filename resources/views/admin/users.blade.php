@@ -2,7 +2,7 @@
 
 @section('content')
     <h2>Accounts</h2>
-    <p class="subtitle">Create and manage the accounts of the reception staff.</p>
+    <p class="subtitle">{{ auth()->user()->isSuperAdmin() ? 'Create and manage every account: admins and reception staff.' : 'Create and manage the accounts of the reception staff.' }}</p>
 
     <form class="box" method="POST" action="{{ $editing ? '/admin/users/'.$editing->id : '/admin/users' }}">
         @csrf
@@ -22,10 +22,20 @@
             </div>
             <div>
                 <label for="role">Role <span class="req">*</span></label>
+                @php
+                    // editing your own account: your role is shown but cannot be changed
+                    $roles = $editing && $editing->id == auth()->id()
+                        ? [$editing->role => $editing->roleLabel()]
+                        : auth()->user()->assignableRoles();
+                @endphp
                 <select id="role" name="role">
-                    <option value="reception" {{ old('role', optional($editing)->role) == 'reception' ? 'selected' : '' }}>Reception</option>
-                    <option value="admin" {{ old('role', optional($editing)->role) == 'admin' ? 'selected' : '' }}>Admin</option>
+                    @foreach ($roles as $value => $label)
+                        <option value="{{ $value }}" {{ old('role', optional($editing)->role ?? 'reception') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                    @endforeach
                 </select>
+                @if (! auth()->user()->isSuperAdmin())
+                    <p class="hint">Only the super admin can create or change admin accounts.</p>
+                @endif
             </div>
         </div>
         <p class="hint">
@@ -51,16 +61,20 @@
                     <tr>
                         <td>{{ $user->name }} @if ($user->id == auth()->id())<small class="muted">(you)</small>@endif</td>
                         <td>{{ $user->email }}</td>
-                        <td>{{ $user->role == 'admin' ? 'Admin' : 'Reception' }}</td>
+                        <td>{{ $user->roleLabel() }}</td>
                         <td><span class="badge {{ $user->active ? 'free' : 'used' }}">{{ $user->active ? 'Active' : 'Deactivated' }}</span></td>
                         <td>
                             <div class="actions">
-                                <a class="btn small" href="/admin/users/{{ $user->id }}/edit">Edit</a>
-                                <form method="POST" action="/admin/users/{{ $user->id }}/password-link" data-confirm="Email {{ $user->name }} a link to set a new password?">
-                                    @csrf
-                                    <button type="submit" class="small">Send password link</button>
-                                </form>
-                                @if ($user->id != auth()->id())
+                                @if (auth()->user()->canManage($user))
+                                    <a class="btn small" href="/admin/users/{{ $user->id }}/edit">Edit</a>
+                                    <form method="POST" action="/admin/users/{{ $user->id }}/password-link" data-confirm="Email {{ $user->name }} a link to set a new password?">
+                                        @csrf
+                                        <button type="submit" class="small">Send password link</button>
+                                    </form>
+                                @else
+                                    <span class="muted">Managed by the super admin</span>
+                                @endif
+                                @if (auth()->user()->canDeactivate($user))
                                     <form method="POST" action="/admin/users/{{ $user->id }}/toggle" data-confirm="{{ $user->active ? 'Deactivate' : 'Activate' }} {{ $user->name }}?">
                                         @csrf
                                         <button type="submit" class="small {{ $user->active ? 'danger' : 'success-btn' }}">{{ $user->active ? 'Deactivate' : 'Activate' }}</button>

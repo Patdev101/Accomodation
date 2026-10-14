@@ -130,7 +130,7 @@
                     @foreach ($users as $user)
                         <tr>
                             <td>{{ $user->name }}<br><small class="muted">{{ $user->email }}</small></td>
-                            <td>{{ $user->role == 'admin' ? 'Admin' : 'Reception' }}</td>
+                            <td>{{ $user->roleLabel() }}</td>
                             <td><span class="badge {{ $user->active ? 'free' : 'used' }}">{{ $user->active ? 'Active' : 'Deactivated' }}</span></td>
                         </tr>
                     @endforeach
