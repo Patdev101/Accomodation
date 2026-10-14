@@ -142,6 +142,10 @@ The seeder creates the login above, 7 rooms and 2 sample bookings. **The guest n
 
 **Confirm pop-up (7 October 2026):** the browser's own "OK / Cancel" box is no longer used. A form with `data-confirm="question"` opens the app's own pop-up (in `layout.blade.php`) before it is sent; the confirm button copies the text and colour of the button that was clicked. `{field}` in the question is replaced by that field's value (the payment step uses `{amount}`), and `data-confirm-ok="text"` sets the confirm button text. Do not add `onsubmit="return confirm(...)"` again. Check-out step 5 (billing and payment) shows the bill as a summary list (`.bill-summary`) with the payment box and button on one row.
 
+**User manual (9 October 2026):** `docs/Guest-Accommodation-User-Manual.pdf` (29 pages, for reception staff and admins). It is built by `docs/manual/build_manual.py` from the text in that script and the screenshots in `docs/manual/screens/`. After changing a screen, replace its PNG (same file name), update the text if needed, and run `python docs\manual\build_manual.py` (needs `pip install reportlab`).
+
+**Auto refresh (14 October 2026):** the Dashboard, Check-out (list and a guest's steps), Reservations, Calendar, Guest Log, Admin Dashboard and admin Rooms pages reload by themselves when another user changes a booking, room or location. Every 5 seconds the page asks `/live-version` for a short code (`App\Support\LiveVersion::current()`: the count and latest `updated_at` of bookings, rooms and locations); when it differs from the code the page was loaded with, the page reloads and returns to the same scroll position. It never reloads while a pop-up is open, a box is focused, or someone has typed in a form on the page; then a small "Another user made changes — Refresh now" notice appears instead. Check-in, the room form, Accounts and Locations are left out so typing is never lost. The script is at the bottom of `layout.blade.php`. There is no websocket server; this is plain polling.
+
 Rules the code enforces (kept deliberately basic):
 
 - A room cannot be reserved twice for overlapping dates.

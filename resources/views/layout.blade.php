@@ -153,5 +153,92 @@
             });
         })();
     </script>
+    {{-- AUTO REFRESH: these pages reload by themselves when another user changes a booking or a room.
+         Pages where someone types a long form (check-in, room form, accounts, locations) are left out. --}}
+    @if (request()->is('dashboard', 'checkout', 'checkout/*', 'bookings', 'calendar', 'reports', 'admin', 'rooms'))
+        <div class="live-notice" id="liveNotice" hidden>
+            Another user made changes.
+            <button type="button" class="small primary" onclick="location.reload()">Refresh now</button>
+        </div>
+
+        <script>
+            (function () {
+                const loadedVersion = '{{ App\Support\LiveVersion::current() }}';
+                const notice = document.getElementById('liveNotice');
+                let typing = false;
+                let changed = false;
+
+                // come back to the same place on the page after a reload
+                try {
+                    const y = sessionStorage.getItem('liveScroll:' + location.pathname);
+
+                    sessionStorage.removeItem('liveScroll:' + location.pathname);
+
+                    if (y !== null) {
+                        window.addEventListener('load', function () {
+                            window.scrollTo(0, Number(y));
+                        });
+                    }
+                } catch (error) {}
+
+                // once someone starts typing in a form (not a filter above a table), the page is never reloaded under them
+                document.addEventListener('input', function (event) {
+                    if (! event.target.closest('.search-row')) {
+                        typing = true;
+                    }
+                });
+
+                function busy() {
+                    const active = document.activeElement;
+
+                    return typing
+                        || document.hidden
+                        || document.querySelector('.modal.show') !== null
+                        || (active && ['INPUT', 'SELECT', 'TEXTAREA'].includes(active.tagName));
+                }
+
+                function refreshIfChanged() {
+                    if (! changed) {
+                        return;
+                    }
+
+                    if (busy()) {
+                        // do not interrupt: offer a button instead
+                        notice.hidden = document.hidden;
+                        return;
+                    }
+
+                    try {
+                        sessionStorage.setItem('liveScroll:' + location.pathname, window.scrollY);
+                    } catch (error) {}
+
+                    location.reload();
+                }
+
+                setInterval(function () {
+                    if (document.hidden || changed) {
+                        refreshIfChanged();
+                        return;
+                    }
+
+                    fetch('/live-version', { headers: { 'Accept': 'application/json' }, credentials: 'same-origin' })
+                        .then(function (response) {
+                            return response.ok ? response.json() : null;
+                        })
+                        .then(function (data) {
+                            if (data && data.version !== loadedVersion) {
+                                changed = true;
+                                refreshIfChanged();
+                            }
+                        })
+                        .catch(function () {});
+                }, 5000);
+
+                // a tab that was in the background catches up when it is opened again
+                document.addEventListener('visibilitychange', refreshIfChanged);
+            })();
+        </script>
+    @endif
+
 </body>
 </html>

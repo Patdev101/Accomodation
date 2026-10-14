@@ -2668,3 +2668,40 @@ button:disabled {
 .confirm-box .actions {
     justify-content: flex-end;
 }
+
+/* =========================================================
+   AUTO REFRESH NOTICE (shown when the page cannot reload by itself)
+   ========================================================= */
+
+.live-notice {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+
+    z-index: 900;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 10px 12px 10px 16px;
+
+    background: #fff;
+    color: var(--text);
+
+    border: 1px solid var(--teal-border);
+    border-left: 4px solid var(--teal);
+    border-radius: 7px;
+
+    box-shadow: var(--shadow);
+
+    font-size: 13px;
+}
+
+@media print {
+
+    .live-notice {
+        display: none !important;
+    }
+}

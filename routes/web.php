@@ -9,6 +9,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\ReceptionOnly;
+use App\Support\LiveVersion;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => redirect('/login'));
@@ -24,6 +25,9 @@ Route::get('/reset-password/{token}', [AuthController::class, 'showReset'])->nam
 Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
 
 Route::middleware('auth')->group(function () {
+    // open pages ask this every few seconds to know if another user changed something
+    Route::get('/live-version', fn () => response()->json(['version' => LiveVersion::current()]));
+
     // admin side: locations, rooms and accounts
     Route::middleware(AdminOnly::class)->group(function () {
         Route::get('/admin', [RoomController::class, 'admin']);
