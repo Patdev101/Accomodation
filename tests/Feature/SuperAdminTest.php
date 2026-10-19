@@ -42,7 +42,7 @@ class SuperAdminTest extends TestCase
         $this->actingAs($admin)->put("/admin/users/{$otherAdmin->id}", ['name' => 'Changed', 'email' => $otherAdmin->email, 'role' => 'admin']);
         $this->assertSame('Other Admin', $otherAdmin->fresh()->name);
 
-        $this->actingAs($admin)->post('/admin/users', ['name' => 'New', 'email' => 'new-admin@example.com', 'role' => 'admin'])
+        $this->actingAs($admin)->post('/admin/users', ['name' => 'New', 'email' => 'new-admin@example.com', 'role' => 'admin', 'password' => 'secret-pass-1', 'password_confirmation' => 'secret-pass-1'])
             ->assertSessionHasErrors('role');
 
         // an admin still manages reception accounts

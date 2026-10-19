@@ -2821,3 +2821,262 @@ aside .user {
 aside .user button {
     margin-top: 8px;
 }
+
+/* =========================================================
+   CHANGE PASSWORD (sidebar button and page)
+   ========================================================= */
+
+aside .user-actions {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin-top: 8px;
+}
+
+aside .user-actions form {
+    margin: 0;
+}
+
+aside .user-actions button {
+    margin-top: 0;
+}
+
+/* My account: profile card on top, password form with its checklist underneath */
+.account-page {
+    max-width: none;
+}
+
+.profile-card {
+    padding: 0;
+
+    overflow: hidden;
+}
+
+.profile-head {
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 22px 24px;
+
+    background: linear-gradient(90deg, var(--teal-light), #fff 70%);
+
+    border-bottom: 1px solid var(--border);
+}
+
+.profile-avatar {
+    width: 60px;
+    height: 60px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--nav);
+    color: #fff;
+
+    border: 3px solid #fff;
+    border-radius: 50%;
+
+    box-shadow: 0 0 0 2px var(--teal-border);
+
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: .5px;
+}
+
+.profile-main {
+    min-width: 0;
+}
+
+.profile-main b {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--nav);
+
+    font-size: 19px;
+
+    overflow-wrap: anywhere;
+}
+
+.profile-facts {
+    display: grid;
+
+    grid-template-columns: 1.6fr 1fr 1fr;
+
+    margin: 0;
+}
+
+.profile-facts div {
+    padding: 14px 24px;
+
+    border-right: 1px solid var(--border);
+}
+
+.profile-facts div:last-child {
+    border-right: 0;
+}
+
+.profile-facts dt {
+    color: var(--muted);
+
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+}
+
+.profile-facts dd {
+    margin: 4px 0 0;
+
+    font-weight: 600;
+
+    overflow-wrap: anywhere;
+}
+
+.profile-note {
+    margin: 0;
+    padding: 10px 24px 14px;
+
+    border-top: 1px solid var(--border);
+}
+
+/* the form on the left, the checklist on the right */
+.password-box {
+    display: grid;
+
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+
+    gap: 28px;
+}
+
+.password-form h3 {
+    margin-bottom: 4px;
+}
+
+.password-rules {
+    align-self: start;
+
+    margin-top: 34px;
+    padding: 16px 18px;
+
+    background: #f8fafc;
+
+    border: 1px solid var(--border);
+    border-radius: 7px;
+}
+
+.password-rules h4 {
+    margin: 0 0 10px;
+
+    color: var(--nav);
+
+    font-size: 13px;
+}
+
+.password-rules ul {
+    margin: 0 0 12px;
+    padding: 0;
+
+    list-style: none;
+}
+
+.password-rules li {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 4px 0;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    transition: color .15s ease;
+}
+
+.password-rules li::before {
+    content: '';
+
+    width: 16px;
+    height: 16px;
+
+    flex-shrink: 0;
+
+    border: 2px solid var(--border-dark);
+    border-radius: 50%;
+
+    transition: background .15s ease, border-color .15s ease;
+}
+
+.password-rules li.met {
+    color: var(--green);
+
+    font-weight: 600;
+}
+
+.password-rules li.met::before {
+    background: var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat;
+
+    border-color: var(--green);
+}
+
+.password-rules .hint {
+    margin: 0;
+}
+
+button.primary:disabled {
+    opacity: .5;
+
+    cursor: not-allowed;
+}
+
+@media (max-width: 800px) {
+
+    .profile-facts,
+    .password-box {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-facts div {
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .password-rules {
+        margin-top: 0;
+    }
+}
+
+.account-actions {
+    margin-top: 18px;
+}
+
+@media (max-width: 800px) {
+
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* My account: a rule that is still not met after typing, and the reason beside the save button */
+.password-rules li.bad {
+    color: var(--red, #c0392b);
+}
+
+.password-rules li.bad::before {
+    border-color: var(--red, #c0392b);
+}
+
+.save-why {
+    align-self: center;
+    color: var(--red, #c0392b);
+    font-size: 14px;
+}

@@ -37,11 +37,25 @@
                     <p class="hint">Only the super admin can create or change admin accounts.</p>
                 @endif
             </div>
+            <div>
+                <label for="password">{{ $editing ? 'New password' : 'Password' }} @if (! $editing)<span class="req">*</span>@endif</label>
+                <div class="password-field">
+                    <input id="password" name="password" type="password" minlength="8" autocomplete="new-password" {{ $editing ? '' : 'required' }}>
+                    <button type="button" class="password-toggle" aria-label="Show password" onclick="togglePassword(this)">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                            <line class="slash" x1="3" y1="3" x2="21" y2="21"/>
+                        </svg>
+                    </button>
+                </div>
+                <p class="hint">{{ $editing ? 'Leave empty to keep the current password. Fill in only to reset a forgotten password.' : 'At least 8 characters. Use the eye to check what you typed.' }}</p>
+            </div>
         </div>
         <p class="hint">
             {{ $editing
-                ? 'The password is not changed here. Use "Send password link" in the list below.'
-                : 'You do not set the password. A link is emailed to this address so the user can set their own.' }}
+                ? 'If you set a new password, give it to the person. They can change it themselves on their My account page.'
+                : 'Give the email and password to the person. They can change the password themselves on their My account page after logging in.' }}
         </p>
         <br>
         <div class="actions">
@@ -67,10 +81,6 @@
                             <div class="actions">
                                 @if (auth()->user()->canManage($user))
                                     <a class="btn small" href="/admin/users/{{ $user->id }}/edit">Edit</a>
-                                    <form method="POST" action="/admin/users/{{ $user->id }}/password-link" data-confirm="Email {{ $user->name }} a link to set a new password?">
-                                        @csrf
-                                        <button type="submit" class="small">Send password link</button>
-                                    </form>
                                 @else
                                     <span class="muted">Managed by the super admin</span>
                                 @endif
@@ -86,6 +96,17 @@
                 @endforeach
             </table>
         </div>
-        <p class="hint">A deactivated account cannot log in. Its records stay in the guest log. A password link works for {{ config('auth.passwords.users.expire') }} minutes.</p>
+        <p class="hint">A deactivated account cannot log in. Its records stay in the guest log. To reset a forgotten password, click Edit and set a new one.</p>
     </div>
+    <script>
+        // the eye button: show or hide what is typed in the password box beside it
+        function togglePassword(button) {
+            const field = button.parentElement.querySelector('input');
+            const show = field.type === 'password';
+
+            field.type = show ? 'text' : 'password';
+            button.classList.toggle('on', show);
+            button.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+        }
+    </script>
 @endsection

@@ -170,9 +170,11 @@ p('The Guest Accommodation System is where the company records who is staying in
   'check-in and check-out process step by step.', 'lead')
 
 h2('Who uses it')
-p('There are two kinds of account. Each one sees only its own screens.')
+p('There are three kinds of account. Reception and admin each see only their own screens; the super admin sees both.')
 table(['Account', 'What it is for', 'Screens'], [
-    ['<b>Admin</b>', 'Sets the system up: the locations, the rooms and their rates, and the staff accounts.',
+    ['<b>Super admin</b>', 'The highest account. Does everything an admin does, manages the admin accounts, and can also use the front desk. It can never be deactivated.',
+     'All screens'],
+    ['<b>Admin</b>', 'Sets the system up: the locations, the rooms and their rates, and the reception accounts.',
      'Admin Dashboard, Locations, Rooms, Accounts'],
     ['<b>Reception</b>', 'Runs the front desk every day: reservations, check-in, check-out, payments and the guest log.',
      'Dashboard, Check-in, Check-out, Reservations, Calendar, Guest Log'],
@@ -204,7 +206,8 @@ bullets([
     'A red star (<font color="#c9423d">*</font>) beside a box means it must be filled in.',
     'A <b>green message</b> at the top of the page means the action was saved. A <b>red message</b> explains what must be fixed.',
     'Long tables show a few rows at a time. Use <b>Previous</b> and <b>Next</b> under the table to see the rest.',
-    'Before anything is deleted, cancelled or paid, a small box asks you to confirm. Nothing happens until you confirm.',
+    'Before anything is deleted, cancelled or paid, a <b>Please confirm</b> box asks you to confirm. Nothing happens until you click the confirm button; <b>Cancel</b> leaves everything as it was.',
+    'Pages <b>update by themselves</b> within a few seconds when another user changes something, so two people at the desk always see the same rooms and guests. If you are typing in a form at that moment, the page is not reloaded; a small <b>Another user made changes</b> notice appears with a <b>Refresh now</b> button instead.',
     '<b>Logout</b> is at the bottom of the menu. Log out when you leave the computer.',
 ])
 
@@ -220,7 +223,7 @@ steps([
     'Open the system in your browser. The login page appears.',
     'Type your <b>email</b> and your <b>password</b>.',
     'To check what you typed, click the <b>eye</b> at the right of the password box. Click it again to hide the password.',
-    'Click <b>Login</b>. An admin goes to the Admin Dashboard; reception goes to the Reception Dashboard.',
+    'Click <b>Login</b>. An admin or super admin goes to the Admin Dashboard; reception goes to the Reception Dashboard.',
 ])
 shot('01-login', 'The login page. The eye in the password box shows or hides what you type.')
 box('If the page says "This account is deactivated", ask the admin to turn your account back on.')
@@ -310,33 +313,56 @@ shot('10-edit-room', 'Editing room A-101.')
 
 part('For the admin|6. Accounts')
 p('Create a login for each person who uses the system. You do not set or see their password.', 'lead')
-shot('06-accounts', 'The Accounts page.')
+shot('06-accounts', 'The Accounts page as the super admin sees it: every account, with its role.')
+h2('Who manages which accounts')
+table(['You are', 'You can create and manage'], [
+    ['<b>Admin</b>', 'Reception accounts, and your own name and email. Admin and super admin accounts show "Managed by the super admin".'],
+    ['<b>Super admin</b>', 'Every account: reception, admin and super admin.'],
+], [0.25, 0.75])
 h2('Create an account')
 steps([
     'Open <b>Accounts</b> in the menu.',
     'Type the person\'s <b>Name</b> and <b>Email</b>. Use an email they can open.',
-    'Choose the <b>Role</b>: Reception for front-desk staff, Admin for someone who sets the system up.',
+    'Choose the <b>Role</b>. An admin can only choose Reception; the super admin can also choose Admin or Super admin.',
     'Click <b>Create account</b>. The system emails them a link to set their own password.',
 ])
+box('If the page says the email could not be sent, the account was still created. Ask whoever manages the server to check the mail settings, then click <b>Send password link</b> on that account.')
 h2('Manage an account')
 bullets([
     '<b>Edit:</b> change the name, email or role.',
     '<b>Send password link:</b> emails a new link, for someone who forgot their password or whose first link expired.',
     '<b>Deactivate:</b> the person can no longer log in. Their past records stay in the guest log. <b>Activate</b> turns the account back on.',
 ])
-box('You cannot deactivate your own account or remove your own admin role, so the system always has an admin.')
+box('Nobody can deactivate their own account or change their own role, and a super admin account can never be deactivated, so the system always has someone who can manage it.')
+
+part('For the super admin|7. The super admin account')
+p('The super admin is the highest account in the system. It is meant for the person responsible for the whole system, such as the department head.', 'lead')
+shot('36-superadmin-dashboard', 'The super admin\'s menu has both the setup pages and the front desk.')
+h2('What the super admin can do')
+bullets([
+    '<b>Everything an admin does:</b> the Admin Dashboard, Locations, Rooms and Accounts (chapters 3 to 6).',
+    '<b>Use the front desk:</b> the <b>Front desk dashboard</b>, Check-in, Check-out, Reservations, Calendar and Guest Log, exactly as reception does (chapters 8 to 13).',
+    '<b>Manage admin accounts:</b> create, edit, deactivate and send password links to admins. Only the super admin can do this.',
+    '<b>Never be deactivated:</b> no account, not even another super admin, can turn a super admin off.',
+])
+h2('Creating the first super admin')
+p('The first super admin is created on the server by whoever manages it, with this command in the system\'s folder:')
+box('<font face="Courier">php artisan user:superadmin name@company.com --name="Full Name"</font><br/>'
+    'It prints a temporary password once. Log in with it and set your own password straight away with "Forgot password?". '
+    'If the email already has an account, that account becomes the super admin and keeps its password.')
 
 # =====================================================================
 # PART B: RECEPTION
 # =====================================================================
 
-part('For reception|7. Reception Dashboard')
+part('For reception|8. Reception Dashboard')
 p('The first page reception sees. It shows what needs attention now and is the fastest way to start a check-in or check-out.', 'lead')
 shot('12-reception-dashboard', 'Top of the Dashboard: the counts and the check-out alerts.', WIDTH * 0.78)
 bullets([
     '<b>Tiles:</b> total rooms, available, occupied, rooms in check-out / inspection / cleaning, guests to arrive, and guests due to leave.',
     '<b>Check-out alerts:</b> guests who have passed their expected check-out time, or will reach it within two hours. Click <b>Check out</b> or <b>Continue check-out</b> to open that guest.',
     '<b>+ Check in a guest</b> and <b>Check out a guest</b> at the top right open those pages.',
+    'The dashboard <b>updates by itself</b> when another receptionist or the admin changes something, for example a check-in, a new room or a room marked Available.',
 ])
 
 h2('The room cards')
@@ -351,7 +377,7 @@ h3('Get room: check a guest in to a room you picked')
 steps([
     'Find an <b>Available</b> room, using the filters if needed.',
     'Click the green <b>Get room</b> button on its card.',
-    'The Check-in page opens with that room already chosen. Continue with the steps in chapter 9.',
+    'The Check-in page opens with that room already chosen. Continue with the steps in chapter 10.',
 ])
 h3('Change a room\'s status')
 steps([
@@ -369,7 +395,7 @@ bullets([
     '<b>Rooms needing attention:</b> rooms in Check-out, Inspection, Cleaning or Maintenance. When a room is ready, set it to Available from its card.',
 ])
 
-part('For reception|8. Reservations')
+part('For reception|9. Reservations')
 p('Use this page for guests who book before they arrive. It lists advance bookings only; once a guest is checked in, their record moves to the Check-out page.', 'lead')
 shot('28-reservations', 'The Reservations page.')
 bullets([
@@ -399,7 +425,7 @@ table(['Button', 'What it does'], [
 shot('31-reservation-details', 'View: the details of a reservation.')
 shot('30-estimated-bill', 'Estimate: what the stay is expected to cost. Print bill prints it.')
 
-part('For reception|9. Check-in')
+part('For reception|10. Check-in')
 p('Check-in follows the company\'s eight steps. Steps 1 and 2 (the guest arrives and reports to reception) happen in person; '
   'the system starts at step 3 and shows one step at a time.', 'lead')
 bullets([
@@ -446,8 +472,11 @@ steps([
     'Click <b>Complete check-in</b>.',
 ])
 shot('19-checkin-room', 'Step 6: rate type, room and the estimated cost.')
+h3('If the room does not have the rate you chose')
+p('The room stays selected and a red message lists the rates that room does have. Choose one of those rate types, or pick another room. '
+  'The check-in cannot be completed until the rate and the room match.')
+shot('34-checkin-rate-message', 'B-105 only has a Daily rate, so "Per night" shows which rate to choose instead.')
 bullets([
-    '<b>If the room does not have the rate you chose,</b> a red message lists the rates that room does have. Choose one of those, or pick another room. The room stays selected.',
     '<b>If the group is bigger than the room,</b> a red message says how many guests still need a room and suggests rooms to add. Tick them under <b>Additional rooms for this group</b>. Each room gets its own record and slip.',
 ])
 
@@ -460,7 +489,7 @@ steps([
 ])
 shot('20-room-slip', 'The room assignment slip, with the guest list and the room.', WIDTH * 0.72)
 
-part('For reception|10. Check-out')
+part('For reception|11. Check-out')
 p('The Check-out page lists everyone who has checked in. Each guest is checked out in eight steps that must be done in order.', 'lead')
 shot('21-checkout-list', 'The Check-out page: guests in house first, then guests who already checked out.')
 bullets([
@@ -492,9 +521,10 @@ p('The bill is shown as a list: accommodation, additional charges, total, amount
 steps([
     'Collect the payment from the guest.',
     'The <b>Payment received</b> box already shows the balance. Change it only if the guest pays a different amount.',
-    'Click <b>Record payment</b> and confirm.',
+    'Click <b>Record payment</b>. A box shows the amount and the guest\'s name; check them and click <b>Record payment</b> in the box.',
 ])
 shot('24-checkout-billing', 'Step 5: the bill summary and the payment.')
+shot('35-confirm-popup', 'The confirmation box. Nothing is saved until you confirm; Cancel goes back.', WIDTH * 0.7)
 box('The ID can only be returned when the bill is paid in full. If the guest pays part of it, that amount is kept on the bill and this step stays open for the rest.', 'warn')
 
 h2('Step 6: Return surrendered ID')
@@ -515,7 +545,7 @@ p('<b>View bill</b> opens the bill for a stay: the guest and stay details, each 
   'the amount paid and the balance. Click <b>Print bill</b> to print it for the guest.')
 shot('27-guest-bill', 'A paid guest bill.', WIDTH * 0.78)
 
-part('For reception|11. Calendar')
+part('For reception|12. Calendar')
 p('A month view of who arrives and who is expected to leave on each day.', 'lead')
 shot('32-calendar', 'The Calendar for one month.')
 bullets([
@@ -526,7 +556,7 @@ bullets([
     'Click a day to review its schedule.',
 ])
 
-part('For reception|12. Guest Log')
+part('For reception|13. Guest Log')
 p('The permanent record of every guest who checked in, with their check-out and payment.', 'lead')
 shot('33-guest-log', 'The Guest Log.')
 bullets([
@@ -546,7 +576,7 @@ p('Click <b>Export to CSV</b> at the top right. A file is downloaded that opens 
 # QUICK ANSWERS
 # =====================================================================
 
-part('Help|13. Common questions')
+part('Help|14. Common questions')
 table(['Question', 'Answer'], [
     ['I cannot log in.',
      'Check the email and use the eye to check the password. If you forgot it, click <b>Forgot password?</b> If the page says the account is deactivated, ask the admin.'],
@@ -571,9 +601,15 @@ table(['Question', 'Answer'], [
     ['I made a mistake in a step of the check-in.',
      'Before clicking Complete check-in, click <b>Back</b> or the step in the bar, and correct it.'],
     ['A page I need is not in my menu.',
-     'Reception accounts see only the front desk, and admin accounts see only the setup pages. Ask the admin if you need a different role.'],
+     'Reception accounts see only the front desk, and admin accounts see only the setup pages. Only the super admin sees both. Ask an admin or the super admin if you need a different role.'],
+    ['I cannot edit or deactivate an admin account.',
+     'Only the super admin manages admin accounts. A super admin account cannot be deactivated by anyone.'],
+    ['A notice says "Another user made changes".',
+     'Someone else changed a booking or a room while you were typing. Finish what you are doing, then click <b>Refresh now</b> to see the latest information.'],
+    ['Account creation says the email could not be sent.',
+     'The account exists, but the email was not delivered. Ask whoever manages the server to check the mail settings, then use <b>Send password link</b>.'],
 ], [0.36, 0.64])
-box('For anything not covered here, contact your system administrator.')
+box('For anything not covered here, contact your system administrator or the super admin.')
 
 
 # =====================================================================
@@ -601,6 +637,15 @@ def cover(canvas, doc):
     canvas.setFillColor(TEAL)
     canvas.rect(0, height * 0.42 - 5, width, 5, stroke=0, fill=1)
 
+    # company logo, on a white circle so it reads on the navy band
+    logo = Path(__file__).parents[2] / 'public' / 'img' / 'logo.png'
+    if logo.exists():
+        size = 120
+        x, y = MARGIN, height * 0.75
+        canvas.setFillColor(colors.white)
+        canvas.circle(x + size / 2, y + size / 2, size / 2 + 3, stroke=0, fill=1)
+        canvas.drawImage(str(logo), x, y, size, size, mask='auto')
+
     canvas.setFillColor(colors.white)
     canvas.setFont('Body-Bold', 34)
     canvas.drawString(MARGIN, height * 0.66, TITLE)
@@ -608,7 +653,7 @@ def cover(canvas, doc):
     canvas.drawString(MARGIN, height * 0.66 - 36, SUBTITLE)
     canvas.setFillColor(colors.HexColor('#a9bbd9'))
     canvas.setFont('Body', 12)
-    canvas.drawString(MARGIN, height * 0.66 - 66, 'For reception staff and administrators')
+    canvas.drawString(MARGIN, height * 0.66 - 66, 'For reception staff, administrators and the super admin')
 
     canvas.setFillColor(TEXT)
     canvas.setFont('Body-Bold', 13)

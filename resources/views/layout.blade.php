@@ -46,6 +46,10 @@
                 <a href="/rooms" class="{{ request()->is('rooms*') ? 'active' : '' }}">Rooms</a>
                 <a href="/admin/users" class="{{ request()->is('admin/users*') ? 'active' : '' }}">Accounts</a>
             @endif
+
+            {{-- every role: your own details and password --}}
+            <div class="group">Account</div>
+            <a href="/account" class="{{ request()->is('account*') ? 'active' : '' }}">My account</a>
         </nav>
 
         <div class="user">

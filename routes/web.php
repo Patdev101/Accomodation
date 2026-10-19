@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
@@ -28,6 +29,11 @@ Route::middleware('auth')->group(function () {
     // open pages ask this every few seconds to know if another user changed something
     Route::get('/live-version', fn () => response()->json(['version' => LiveVersion::current()]));
 
+    // every user can change their own password
+    Route::get('/account', [AccountController::class, 'show']);
+    Route::redirect('/account/password', '/account');
+    Route::put('/account/password', [AccountController::class, 'updatePassword']);
+
     // admin side: locations, rooms and accounts
     Route::middleware(AdminOnly::class)->group(function () {
         Route::get('/admin', [RoomController::class, 'admin']);
@@ -45,7 +51,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/users/{user}/edit', [UserController::class, 'edit']);
         Route::put('/admin/users/{user}', [UserController::class, 'update']);
         Route::post('/admin/users/{user}/toggle', [UserController::class, 'toggle']);
-        Route::post('/admin/users/{user}/password-link', [UserController::class, 'sendLink']);
     });
 
     // reception side: the front desk
