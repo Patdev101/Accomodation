@@ -41,6 +41,8 @@ class Booking extends Model
         'checkout_step', 'inspection_notes', 'damage_notes', 'charges', 'charges_paid', 'id_returned', 'room_after',
         'actual_check_out', 'checkout_notes', 'guest_list', 'address',
         'billing_rate_type', 'billing_rate', 'checked_in_at', 'checkout_verified_at',
+        'checkin_time_reason', 'checkin_recorded_at', 'checkin_recorded_by',
+        'checkout_time_reason', 'checkout_recorded_at', 'checkout_recorded_by',
         'additional_charges', 'amount_paid',
     ];
 
@@ -57,6 +59,8 @@ class Booking extends Model
         'billing_rate' => 'decimal:2',
         'checked_in_at' => 'datetime',
         'checkout_verified_at' => 'datetime',
+        'checkin_recorded_at' => 'datetime',
+        'checkout_recorded_at' => 'datetime',
         'additional_charges' => 'array',
         'amount_paid' => 'decimal:2',
     ];

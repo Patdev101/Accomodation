@@ -45,7 +45,11 @@
         @if ($current == 2)
             <form method="POST" action="/checkout/{{ $booking->id }}/verify">
                 @csrf
-                <p style="margin-top:0">Confirm that this is <b>{{ $booking->guest_name }}</b>, staying in <b>{{ $booking->room->room_no }}</b>, and they are checking out now.</p>
+                <p style="margin-top:0">Confirm that this is <b>{{ $booking->guest_name }}</b>, staying in <b>{{ $booking->room->room_no }}</b>, and they are checking out.</p>
+                <div class="checkout-time">
+                    @include('partials.actual-time', ['field' => 'actual_check_out', 'label' => 'check-out', 'min' => $booking->billingStart()])
+                    @include('partials.actual-time-reason', ['field' => 'actual_check_out', 'reasonField' => 'checkout_time_reason', 'label' => 'check-out'])
+                </div>
                 <button type="submit" class="primary">Confirm and continue</button>
                 <p class="hint">The room status changes to Check-out.</p>
             </form>

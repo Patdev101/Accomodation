@@ -43,6 +43,13 @@
             <div><dt>{{ $booking->checkout_verified_at ? 'Check-out' : 'Expected check-out' }}</dt><dd>{{ $booking->billingEnd()->format('M d, Y h:i A') }}</dd></div>
         </dl>
 
+        {{-- times that were entered later than they happened --}}
+        @foreach ([['Check-in', 'checkin'], ['Check-out', 'checkout']] as [$what, $prefix])
+            @if ($booking->{$prefix.'_time_reason'})
+                <p class="hint">{{ $what }} time entered later: recorded {{ $booking->{$prefix.'_recorded_at'}->format('M d, Y h:i A') }} by {{ $booking->{$prefix.'_recorded_by'} }}. Reason: {{ $booking->{$prefix.'_time_reason'} }}</p>
+            @endif
+        @endforeach
+
         @if ($booking->no_of_guests > 1)
             <p><b>Group:</b> {{ collect($booking->guests())->pluck('name')->implode(', ') }}</p>
         @endif

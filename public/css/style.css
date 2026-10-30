@@ -3080,3 +3080,62 @@ button.primary:disabled {
     color: var(--red, #c0392b);
     font-size: 14px;
 }
+
+/* Check-in: number of guests, actual arrival and expected check-out side by side */
+.stay-row {
+    display: grid;
+    grid-template-columns: minmax(140px, .6fr) 1fr 1fr;
+    gap: inherit;
+    align-items: start;
+}
+
+.actual-time-reason {
+    margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+    .stay-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* the "time is earlier than now" reason box: a soft amber note across the form */
+.time-reason {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 18px;
+    align-items: end;
+    padding: 14px 18px;
+    border: 1px solid #ecd28f;
+    border-left: 4px solid #d99a1e;
+    border-radius: 10px;
+    background: #fdf6e3;
+}
+
+.time-reason[hidden] {
+    display: none;
+}
+
+.time-reason-text {
+    color: #6b4e12;
+    font-size: 14px;
+    line-height: 1.5;
+    align-self: center;
+}
+
+.checkout-time {
+    display: grid;
+    gap: 14px;
+    max-width: 720px;
+    margin-bottom: 16px;
+}
+
+.checkout-time .time-reason {
+    grid-template-columns: 1fr;
+}
+
+@media (max-width: 800px) {
+    .time-reason {
+        grid-template-columns: 1fr;
+    }
+}

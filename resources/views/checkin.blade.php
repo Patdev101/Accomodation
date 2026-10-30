@@ -115,6 +115,8 @@
                     >
                 </div>
 
+                {{-- one row: how many, when they arrived, when they leave --}}
+                <div class="full stay-row">
                 <div>
                     <label for="no_of_guests">
                         Number of guests <span class="req">*</span>
@@ -128,6 +130,12 @@
                         value="{{ old('no_of_guests', optional($selected)->no_of_guests ?? 1) }}"
                         required
                     >
+                    <p class="hint">Including the guest named above.</p>
+                </div>
+
+                {{-- ACTUAL ARRIVAL (night arrivals encoded in the morning) --}}
+                <div>
+                    @include('partials.actual-time', ['field' => 'actual_check_in', 'label' => 'arrival'])
                 </div>
 
                 {{-- EXPECTED CHECK-OUT --}}
@@ -171,8 +179,14 @@
                     >
 
                     <p class="hint">
-                        Select the expected date and time the guest will leave.
+                        When the guest plans to leave.
                     </p>
+                </div>
+                </div>
+
+                {{-- appears under the row when the arrival is set earlier than now --}}
+                <div class="full">
+                    @include('partials.actual-time-reason', ['field' => 'actual_check_in', 'reasonField' => 'checkin_time_reason', 'label' => 'arrival'])
                 </div>
 
                 {{-- GUEST LIST (shown when there are 2 or more guests) --}}

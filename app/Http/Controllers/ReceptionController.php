@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class ReceptionController extends Controller
 {
@@ -91,6 +92,9 @@ class ReceptionController extends Controller
             'contact_no' => 'contact number',
         ]);
 
+        // the real arrival time (from the paper form when the guest came at night)
+        $arrival = $this->actualTime($request, 'actual_check_in', 'checkin_time_reason', 'arrival');
+
         // Convert the combined expected check-out date/time
         // into the existing database fields.
         $checkOut = Carbon::parse($data['check_out_datetime']);
@@ -162,16 +166,17 @@ class ReceptionController extends Controller
         $data['verified'] = true;
         $data['id_surrendered'] = true;
         $data['status'] = 'Checked In';
-        $data['checked_in_at'] = now();
+        $data['checked_in_at'] = $arrival['time'];
+        $data['checkin_time_reason'] = $arrival['reason'];
+        $data['checkin_recorded_at'] = $arrival['recorded_at'];
+        $data['checkin_recorded_by'] = $arrival['recorded_by'];
         $billingRateType = $data['billing_rate_type'];
         unset($data['billing_rate_type']);
 
         if (! $bookingId) {
-            // Walk-in guest.
-            // Actual check-in date and time are recorded automatically
-            // when the receptionist completes the check-in.
-            $data['check_in'] = date('Y-m-d');
-            $data['check_in_time'] = date('H:i');
+            // Walk-in guest: the check-in date and time are the actual arrival.
+            $data['check_in'] = $arrival['time']->format('Y-m-d');
+            $data['check_in_time'] = $arrival['time']->format('H:i');
         }
 
         // Share the guests among the rooms: fill the first room, then the next.
@@ -228,6 +233,42 @@ class ReceptionController extends Controller
             ->with('success', count($summary) > 1
                 ? 'Check-in complete. '.count($summary).' rooms booked: '.implode(', ', $summary).'.'
                 : 'Check-in complete.');
+    }
+
+    // The real arrival / leaving time typed by reception (empty = now).
+    // It may go back at most 24 hours; going back more than 30 minutes needs a reason.
+    private function actualTime(Request $request, string $field, string $reasonField, string $label, ?Carbon $notBefore = null): array
+    {
+        $request->validate([
+            $field => 'nullable|date',
+            $reasonField => 'nullable|max:255',
+        ]);
+
+        $now = now();
+        $time = $request->filled($field) ? Carbon::parse($request->input($field)) : $now->copy();
+        $reason = trim((string) $request->input($reasonField));
+        $errors = [];
+
+        if ($time->gt($now->copy()->addMinutes(5))) {
+            $errors[$field] = 'The actual '.$label.' time cannot be in the future.';
+        } elseif ($time->lt($now->copy()->subDay())) {
+            $errors[$field] = 'The actual '.$label.' time can only go back up to 24 hours.';
+        } elseif ($notBefore && $time->lt($notBefore)) {
+            $errors[$field] = 'The actual '.$label.' time cannot be before the check-in ('.$notBefore->format('M d, Y h:i A').').';
+        } elseif ($time->lt($now->copy()->subMinutes(30)) && $reason === '') {
+            $errors[$reasonField] = 'Give the reason why the '.$label.' time is earlier than now (e.g. arrived at night, form no. 123).';
+        }
+
+        if ($errors) {
+            throw ValidationException::withMessages($errors);
+        }
+
+        return [
+            'time' => $time,
+            'reason' => $time->lt($now->copy()->subMinutes(30)) ? $reason : null,
+            'recorded_at' => $now,
+            'recorded_by' => $request->user()->name,
+        ];
     }
 
     // Why the group does not fit, and which available rooms would take everyone.
@@ -351,10 +392,16 @@ class ReceptionController extends Controller
             return back()->with('error', 'This guest is not checked in.');
         }
 
+        // the real leaving time (when the guest left earlier than it was encoded)
+        $leaving = $this->actualTime($request, 'actual_check_out', 'checkout_time_reason', 'check-out', $booking->billingStart());
+
         $booking->update([
             'status' => 'Checking Out',
             'checkout_step' => 2,
-            'checkout_verified_at' => now(),
+            'checkout_verified_at' => $leaving['time'],
+            'checkout_time_reason' => $leaving['reason'],
+            'checkout_recorded_at' => $leaving['recorded_at'],
+            'checkout_recorded_by' => $leaving['recorded_by'],
         ]);
 
         $booking->room->update([
